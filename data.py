@@ -1,39 +1,39 @@
-import requests
-import random
-import string
+# переменная содержит варианты выбора цвета самоката
+color_selection = [
+                [],
+                ["BLACK"],
+                ["GREY"],
+                ["BLACK", "GREY"]
+]
 
-# метод регистрации нового курьера возвращает список из логина и пароля
-# если регистрация не удалась, возвращает пустой список
-def register_new_courier_and_return_login_password():
-    # метод генерирует строку, состоящую только из букв нижнего регистра, в качестве параметра передаём длину строки
-    def generate_random_string(length):
-        letters = string.ascii_lowercase
-        random_string = ''.join(random.choice(letters) for i in range(length))
-        return random_string
 
-    # создаём список, чтобы метод мог его вернуть
-    login_pass = []
+# класс содержит коды и сообщения ответов на запросы
+class TestMessages:
+    COURIER_SUCCESSFUL_CREATION = {"code": 201, "message": True}
+    COURIER_LOGIN_ALREADY_IN_USE = {"code": 409, "message": "Этот логин уже используется. Попробуйте другой."}
+    COURIER_NOT_ENOUGH_REGISTER_DATA = {"code": 400, "message": "Недостаточно данных для создания учетной записи"}
+    COURIER_SUCCESSFUL_AUTHORIZATION = {"code": 200, "message": None}
+    COURIER_NOT_ENOUGH_AUTHORIZATION_DATA = {"code": 400, "message": "Недостаточно данных для входа"}
+    COURIER_ACCOUNT_NOT_FOUND = {"code": 404, "message": "Учетная запись не найдена"}
+    COURIER_DELETE = {"code": 200, "message": True}
 
-    # генерируем логин, пароль и имя курьера
-    login = generate_random_string(10)
-    password = generate_random_string(10)
-    first_name = generate_random_string(10)
+    ORDER_SUCCESSFUL_CREATION = {"code": 201, "message": "track"}
+    ORDER_GET_LIST_OF_ORDERS = {"code": 200, "message": "orders"}
 
-    # собираем тело запроса
-    payload = {
-        "login": login,
-        "password": password,
-        "firstName": first_name
-    }
 
-    # отправляем запрос на регистрацию курьера и сохраняем ответ в переменную response
-    response = requests.post('https://qa-scooter.praktikum-services.ru/api/v1/courier', data=payload)
+# переменная содержит параметры которые можно исключить при попытке авторизации без определённого параметра
+EXCLUDE_PARAMETERS = {
+    "login": "login",
+    "password": "password",
+    "firstName": "firstName"
+}
 
-    # если регистрация прошла успешно (код ответа 201), добавляем в список логин и пароль курьера
-    if response.status_code == 201:
-        login_pass.append(login)
-        login_pass.append(password)
-        login_pass.append(first_name)
 
-    # возвращаем список
-    return login_pass
+# переменная содержит параметры которые можно изменить при попытке авторизации с изменённым параметром
+CHANGE_PARAMETERS = {
+    "login": "login",
+    "password": "password"
+}
+
+
+
