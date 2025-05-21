@@ -65,7 +65,6 @@ class Generator:
             "comment": Generator.generate_random_russian_string(5),
             "color": random.choice(color_selection)
         }
-       # print(order_data)
         return order_data
 
 
@@ -106,9 +105,10 @@ class Courier:
 
     # статический метод удаляет курьера после теста
     @staticmethod
+    @allure.step('Удаление курьера')
     def delete_courier(registered_courier_data):
         response = Courier.login_courier(registered_courier_data)
-        if response.status_code == TestMessages.COURIER_DELETE["code"]:
+        if response.status_code == TestMessages.COURIER_SUCCESSFUL_AUTHORIZATION["code"]:
             courier_id = response.json()["id"]
             requests.delete(f"{Urls.DELETE_COURIER}{courier_id}")
 

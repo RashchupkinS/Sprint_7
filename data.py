@@ -9,6 +9,7 @@ color_selection = [
 
 # класс содержит коды и сообщения ответов на запросы
 class TestMessages:
+
     COURIER_SUCCESSFUL_CREATION = {"code": 201, "message": True}
     COURIER_LOGIN_ALREADY_IN_USE = {"code": 409, "message": "Этот логин уже используется. Попробуйте другой."}
     COURIER_NOT_ENOUGH_REGISTER_DATA = {"code": 400, "message": "Недостаточно данных для создания учетной записи"}
@@ -34,6 +35,7 @@ CHANGE_PARAMETERS = {
     "login": "login",
     "password": "password"
 }
+
 
 
 

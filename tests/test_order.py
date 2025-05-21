@@ -9,7 +9,7 @@ from helper import Order
 # класс с тестами для создания заказа
 class TestCreateOrder:
 
-    @allure.step('Создание заказа')
+    @allure.title('Создание заказа')
     @pytest.mark.parametrize('color', color_selection)
     def test_create_order_successful_creation(self, random_order_data, color):
         random_order_data["color"] = color
@@ -21,7 +21,7 @@ class TestCreateOrder:
 # класс с тестами для проверки получения списка заказов
 class TestListOfOrders:
 
-    @allure.step('Получение списка заказов')
+    @allure.title('Получение списка заказов')
     def test_get_list_of_orders_successful(self):
         response = Order.get_list_of_orders()
         assert response.status_code == TestMessages.ORDER_GET_LIST_OF_ORDERS["code"]

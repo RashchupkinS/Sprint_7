@@ -8,14 +8,14 @@ from data import TestMessages, EXCLUDE_PARAMETERS, CHANGE_PARAMETERS
 # класс с тестами для регистрации курьера
 class TestCreateCourier:
 
-    @allure.step('Создание курьера')
+    @allure.title('Создание курьера')
     def test_create_courier_successful_creation(self, random_courier_data):
         response = Courier.register_courier(random_courier_data)
         assert response.status_code == TestMessages.COURIER_SUCCESSFUL_CREATION["code"]
         assert response.json()["ok"] == TestMessages.COURIER_SUCCESSFUL_CREATION["message"]
 
 
-    @allure.step('Нельзя создать двух одинаковых курьеров')
+    @allure.title('Нельзя создать двух одинаковых курьеров')
     def test_create_two_identical_couriers_courier_not_created(self, random_courier_data):
         Courier.register_courier(random_courier_data)
         response = Courier.register_courier(random_courier_data)
@@ -23,7 +23,7 @@ class TestCreateCourier:
         assert response.json()["message"] == TestMessages.COURIER_LOGIN_ALREADY_IN_USE["message"]
 
 
-    @allure.step('json не содержит поля - login')
+    @allure.title('Регистрация курьера - json не содержит поля - login')
     def test_create_courier_without_login_field_not_created(self, random_courier_data):
         payload = Courier.excludes_parameter_from_courier_registration_data(random_courier_data,
                                                                             exclude=EXCLUDE_PARAMETERS["login"])
@@ -32,7 +32,7 @@ class TestCreateCourier:
         assert response.json()["message"] == TestMessages.COURIER_NOT_ENOUGH_REGISTER_DATA["message"]
 
 
-    @allure.step('json не содержит поля - password')
+    @allure.title('Регистрация курьера - json не содержит поля - password')
     def test_create_courier_without_password_field_not_created(self, random_courier_data):
         payload = Courier.excludes_parameter_from_courier_registration_data(random_courier_data,
                                                                             exclude=EXCLUDE_PARAMETERS["password"])
@@ -41,7 +41,7 @@ class TestCreateCourier:
         assert response.json()["message"] == TestMessages.COURIER_NOT_ENOUGH_REGISTER_DATA["message"]
 
 
-    @allure.step('json не содержит поля - firstName')
+    @allure.title('Регистрация курьера - json не содержит поля - firstName')
     def test_create_courier_without_firstname_field_successful_created(self, random_courier_data):
         payload = Courier.excludes_parameter_from_courier_registration_data(random_courier_data,
                                                                             exclude=EXCLUDE_PARAMETERS["firstName"])
@@ -53,7 +53,7 @@ class TestCreateCourier:
 # класс с тестами для авторизации курьера
 class TestLoginCourier:
 
-    @allure.step('Логин курьера')
+    @allure.title('Авторизация курьера')
     def test_login_courier_successful_authorized(self, random_courier_data):
         Courier.register_courier(random_courier_data)
         response = Courier.login_courier(random_courier_data)
@@ -61,7 +61,7 @@ class TestLoginCourier:
         assert response.json()["id"] is not TestMessages.COURIER_SUCCESSFUL_AUTHORIZATION["message"]
 
 
-    @allure.step('Логин курьера без поля логин')
+    @allure.title('Авторизация курьера - json не содержит поля - логин')
     def test_login_courier_without_login_not_authorized(self, random_courier_data):
         Courier.register_courier(random_courier_data)
         payload = Courier.excludes_parameter_from_courier_registration_data(random_courier_data,
@@ -71,7 +71,7 @@ class TestLoginCourier:
         assert response.json()["message"] == TestMessages.COURIER_NOT_ENOUGH_AUTHORIZATION_DATA["message"]
 
 
-    @allure.step('Логин курьера без поля password')
+    @allure.title('Авторизация курьера - json не содержит поля - password')
     def test_login_courier_without_password_not_authorized(self, random_courier_data):
         Courier.register_courier(random_courier_data)
         payload = Courier.excludes_parameter_from_courier_registration_data(random_courier_data,
@@ -81,7 +81,7 @@ class TestLoginCourier:
         assert response.json()["message"] == TestMessages.COURIER_NOT_ENOUGH_AUTHORIZATION_DATA["message"]
 
 
-    @allure.step('Логин курьера под несуществующим пользователем')
+    @allure.title('Авторизация курьера если неправильно указать логин')
     def test_courier_with_non_existent_login_not_authorized(self, random_courier_data):
         Courier.register_courier(random_courier_data)
         payload = Courier.change_parameter_value_in_courier_registration_data(random_courier_data,
@@ -91,7 +91,7 @@ class TestLoginCourier:
         assert response.json()["message"] == TestMessages.COURIER_ACCOUNT_NOT_FOUND["message"]
 
 
-    @allure.step('Логин курьера если неправильно указать логин или пароль')
+    @allure.title('Авторизация курьера если неправильно указать пароль')
     def test_courier_with_non_existent_password_not_authorized(self, random_courier_data):
         Courier.register_courier(random_courier_data)
         payload = Courier.change_parameter_value_in_courier_registration_data(random_courier_data,
