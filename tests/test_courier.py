@@ -58,7 +58,7 @@ class TestLoginCourier:
         Courier.register_courier(random_courier_data)
         response = Courier.login_courier(random_courier_data)
         assert response.status_code == TestMessages.COURIER_SUCCESSFUL_AUTHORIZATION["code"]
-        assert response.json()["id"] is not TestMessages.COURIER_SUCCESSFUL_AUTHORIZATION["message"]
+        assert response.json()["id"] != TestMessages.COURIER_SUCCESSFUL_AUTHORIZATION["message"]
 
 
     @allure.title('Авторизация курьера - json не содержит поля - логин')

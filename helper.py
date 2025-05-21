@@ -1,3 +1,5 @@
+import copy
+
 import requests
 import allure
 import random
@@ -75,23 +77,24 @@ class Courier:
     @staticmethod
     @allure.step('Регистрация курьера')
     def register_courier(courier_data):
-        response = requests.post(url=Urls.CREATE_COURIER, data=courier_data)
+        response = requests.post(url=Urls.CREATE_COURIER, json=courier_data)
         return response
 
 
     # статический метод исключает заданную пару ключ-значение из регистрационных данных
     @staticmethod
     def excludes_parameter_from_courier_registration_data(registered_courier_data, exclude):
-        del registered_courier_data[exclude]
-        return registered_courier_data
+        data_copy = copy.deepcopy(registered_courier_data)
+        del data_copy[exclude]
+        return data_copy
 
 
     # статический метод изменяет значение регистрационных данных по ключу(исключает последний символ)
     @staticmethod
     def change_parameter_value_in_courier_registration_data(registered_courier_data, change):
-        change_data = registered_courier_data[change]
-        registered_courier_data[change] = change_data[:-1]
-        return registered_courier_data
+        data_copy = copy.deepcopy(registered_courier_data)
+        data_copy[change] = data_copy[change][:-1]
+        return data_copy
 
 
     # статический метод авторизует курьера
@@ -99,7 +102,7 @@ class Courier:
     @allure.step('Авторизация курьера')
     def login_courier(registered_courier_data):
         del registered_courier_data[EXCLUDE_PARAMETERS["firstName"]]
-        response = requests.post(url=Urls.LOGIN_COURIER, data=registered_courier_data)
+        response = requests.post(url=Urls.LOGIN_COURIER, json=registered_courier_data)
         return response
 
 
@@ -121,8 +124,9 @@ class Order:
     @staticmethod
     @allure.step('Создать заказ')
     def create_order(order_data):
-        response = requests.post(url=Urls.CREATE_ORDER, data=order_data)
-        order_data["delete"] = response.json()["track"]
+        response = requests.post(url=Urls.CREATE_ORDER, json=order_data)
+        if response.status_code == TestMessages.ORDER_SUCCESSFUL_CREATION["code"]:
+            order_data["delete"] = response.json()["track"]
         return response
 
 
@@ -130,7 +134,7 @@ class Order:
     @staticmethod
     def delete_order_after_test(order_data):
         track = order_data["delete"]
-        requests.put(url=Urls.CANCEL_ORDER, data={
+        requests.put(url=Urls.CANCEL_ORDER, json={
             "track": track
         })
 
